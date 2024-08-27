@@ -28,9 +28,9 @@ total_interest = total_payments - loan_amount
 
 st.write("### Repayments")
 col1, col2, col3 = st.columns(3)
-col1.metric(label="Monthly Repayments", value=f"${monthly_payment:,.2f}")
-col2.metric(label="Total Repayments", value=f"${total_payments:,.0f}")
-col3.metric(label="Total Interest", value=f"${total_interest:,.0f}")
+col1.metric(label="Monthly Repayments", value=f"R {monthly_payment:,.2f}")
+col2.metric(label="Total Repayments", value=f"R {total_payments:,.0f}")
+col3.metric(label="Total Interest", value=f"R {total_interest:,.0f}")
 
 
 # Create a data-frame with the payment schedule.
