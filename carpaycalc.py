@@ -15,8 +15,8 @@ term = col2.number_input("Term in years", min_value=1, max_value=15)
 
 #Calculation of Payments
 loan_amount = car_value - deposit
-monthly_interest_rate = (interest_rate/100)/12
-number_of_payments = term*12
+monthly_interest_rate = (interest_rate / 100) / 12
+number_of_payments = term * 12
 monthly_payment_cost = (
     loan_amount
     * (monthly_interest_rate * (1 + monthly_interest_rate) ** number_of_payments)
