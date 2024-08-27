@@ -5,60 +5,57 @@ import math
 
 st.title("Car Payment Calculator")
 
-st.write("### Input Data")
+#Section for User Input
+st.write("###Input Data Here")
 col1, col2 = st.columns(2)
-home_value = col1.number_input("Car Value", min_value=0, value=2000000)
-deposit = col1.number_input("Deposit", min_value=0, value=400000)
-interest_rate = col2.number_input("Interest Rate %", min_value=0.0, value=15.5)
-loan_term = col2.number_input("Loan Term in years", min_value=1, value=30)
+car_value = col1.number_input("Car Value", min_value=0, value=750000)
+deposit = col1.number_input("Your Deposit", min_value=0, max_value=300000)
+interest_rate = col2.number_input("Interest Rate %", min_value=0.0, max_value=15.0)
+term = col2.number_input("Term in years", min_value=1, max_value=15)
 
-# Calculate the repayments.
-loan_amount = home_value - deposit
-monthly_interest_rate = (interest_rate / 100) / 12
-number_of_payments = loan_term * 12
-monthly_payment = (
-    loan_amount
-    * (monthly_interest_rate * (1 + monthly_interest_rate) ** number_of_payments)
-    / ((1 + monthly_interest_rate) ** number_of_payments - 1)
-)
+#Calculation of Payments
+loan_amount = car_value - deposit
+monthly_interest_rate = (interest_rate/100)/12
+number_of_payments = term*12
+monthly_payment_cost = (loan_amount * (monthly_interest_rate * (1 + monthly_interest_rate) ** number_of_payments)
+                        / ((1 + monthly_interest_rate) ** number_of_payments -1)
+                        )
 
-# Display the repayments.
-total_payments = monthly_payment * number_of_payments
-total_interest = total_payments - loan_amount
+#Section to Display Graph
+total_payments = monthly_payment_cost * number_of_payments
+total_interes_rate = total_payments - loan_amount
 
-st.write("### Repayments")
+st.write("### Repayments Over Time")
 col1, col2, col3 = st.columns(3)
-col1.metric(label="Monthly Repayments", value=f"${monthly_payment:,.2f}")
-col2.metric(label="Total Repayments", value=f"${total_payments:,.0f}")
-col3.metric(label="Total Interest", value=f"${total_interest:,.0f}")
+col1.metric(label="Monthly Repayments", value=f"${monthly_payment_cost:,.2f}")
+col1.metric(label="Total Repayments", value=f"${total_payments:,.2f}")
+col1.metric(label="Total Interest", value=f"${total_interes_rate:,.2f}")
 
-
-# Create a data-frame with the payment schedule.
+#Creation of Data-Fraem With Payment Schedule
 schedule = []
 remaining_balance = loan_amount
 
-for i in range(1, number_of_payments + 1):
+for i in range(1, number_of_payments +1):
     interest_payment = remaining_balance * monthly_interest_rate
-    principal_payment = monthly_payment - interest_payment
+    principal_payment = monthly_payment_cost - interest_payment
     remaining_balance -= principal_payment
-    year = math.ceil(i / 12)  # Calculate the year into the loan
+    year = math.ceil(i/12) # Calculating The Year Into The Loasn
     schedule.append(
         [
             i,
-            monthly_payment,
-            principal_payment,
+            monthly_payment_cost,
             interest_payment,
             remaining_balance,
-            year,
+            year
         ]
     )
 
+# Send Data To Panda Data Frame
 df = pd.DataFrame(
-    schedule,
-    columns=["Month", "Payment", "Principal", "Interest", "Remaining Balance", "Year"],
+    schedule, columns=["Month", "Payment", "Principal", "Interest", "Remaining Balance", "Year"],
 )
 
-# Display the data-frame as a chart.
+#Display Data-Frame as Graph to User
 st.write("### Payment Schedule")
-payments_df = df[["Year", "Remaining Balance"]].groupby("Year").min()
-st.line_chart(payments_df)
+payment_df = df[["Year", "Remaining Balance"]].groupby("Year").min()
+st.line_chart(payment_df)
